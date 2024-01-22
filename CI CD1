@@ -1,0 +1,36 @@
+CI/CD. Семинар 01
+Задача
+Зарегистрироваться на gitlab.com
+Создать pipeline и runner
+Попробовать сохранить артефакт одной из стадий + исключить из папки с артефактами любой файл
+Попробовать сделать любую gitlab pages
+Решение
+Сразу проблема с регистрацией из России: поставил gitlab на локальную виртуальную машину
+Файл .gitlab-ci.yml
+image: alpine:latest
+
+pages:
+  stage: deploy
+  script:
+  - echo 'First page 01'
+  - mkdir .public
+  - cp -r * .public
+  - mv .public public
+  artifacts:
+    paths:
+    - public
+    exclude:
+    - public/file_to_exclude.md
+  only:
+  - master
+Gitlab Runner также развернут на той же виртуальной машине, запущен для проекта. Статус: passed.
+
+Исключение файла из папки с артефактами:
+...
+  artifacts:
+    paths:
+    - public
+    exclude:
+    - public/file_to_exclude.md
+...
+gitlab pages… Epic fail! Для единственного локального сервера, чтоб на нем запустить и сам Gitlab, и Pages, — требуются усилия, превосходящие мои возможности. Хотя, судя по третьему скриншоту — процесс прошел удачно. И файлы index.html и style.css были обработаны, и file_to_exclude.md — отброшен.
